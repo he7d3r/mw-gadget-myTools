@@ -43,14 +43,14 @@ myTools.load = function(){
 	$.each( myTools.list, function(i, link){
 		if ( ( $.isFunction(link.autorun) && link.autorun() ) || link.autorun === true ) {
 			// console.log("autorun " + link.title);
-			loadResources( link.style, link.script );
+			loadResources( link.script, link.style );
 		} else if ( ( $.isFunction(link.register) && link.register() ) || link.register === true   ) {
 			// console.log("register " + link.title);
 			$(mw.util.addPortletLink(
 				(link.portlet || 'p-js'), '#', link.title, link.id, link.desc, link.shortcut, link.before
 			)).click( function (e) {
 				e.preventDefault();
-				loadResources( link.style, link.script );
+				loadResources( link.script, link.style );
 			} );
 		}
 	});
