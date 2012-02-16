@@ -43,7 +43,7 @@ myTools.load = function(){
 	$.each( myTools.list, function(i, link){
 		if ( ( $.isFunction(link.autorun) && link.autorun() ) || link.autorun === true ) {
 			// console.log("autorun " + link.title);
-			loadResources();
+			loadResources( link.style, link.script );
 		} else if ( ( $.isFunction(link.register) && link.register() ) || link.register === true   ) {
 			// console.log("register " + link.title);
 			$(mw.util.addPortletLink(
