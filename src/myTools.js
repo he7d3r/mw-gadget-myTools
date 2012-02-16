@@ -17,23 +17,19 @@ myTools.load = function(){
 	var	home = '//pt.wikibooks.org/w/index.php?title=',
 		params = '&action=raw' + (myTools.debug ? '&now=' + myTools.now.getTime() : '&smaxage=21600&maxage=86400'),
 		reIsExternal = /^(https?:)?\/\//,
-		curCSS, curJS, link, x;
-	var loadResources = function(){
+		link, x;
+	var loadResources = function(js, css){
 		var page;
 		// FIXME: Fails on links such as https://toolserver.org/~magnus/wysiwtf/wysiwtf.js
 		// Consider using wikilink2URL() from [[w:en:User:PerfektesChaos/js/Utilities/d.js]]
-		if( curCSS ) {
-			page = reIsExternal.test( curCSS ) ? curCSS: home + curCSS;
+		if( css ) {
+			page = reIsExternal.test( css ) ? css: home + css;
 			mw.loader.load( page + '&ctype=text/css' + params, 'text/css' );
 		}
-		if( curJS ) {
-			page = reIsExternal.test( curJS ) ? curJS: home + curJS;
+		if( js ) {
+			page = reIsExternal.test( js ) ? js: home + js;
 			mw.loader.load( page + '&ctype=text/javascript' + params );
 		}
-	};
-	var preventDefaultThenLoad = function (e) {
-		e.preventDefault();
-		loadResources();
 	};
 	// console.time("timeName");
 
@@ -44,10 +40,7 @@ myTools.load = function(){
 	}).find('li').remove().end().find('span').text('JS');
 
 	// Run (or create a link for) each script
-	for (x = 0; x< myTools.list.length; x++) {
-		link = myTools.list[x];
-		curCSS = link.style;
-		curJS = link.script;
+	$.each( myTools.list, function(i, link){
 		if ( ( $.isFunction(link.autorun) && link.autorun() ) || link.autorun === true ) {
 			// console.log("autorun " + link.title);
 			loadResources();
@@ -55,9 +48,12 @@ myTools.load = function(){
 			// console.log("register " + link.title);
 			$(mw.util.addPortletLink(
 				(link.portlet || 'p-js'), '#', link.title, link.id, link.desc, link.shortcut, link.before
-			)).click( preventDefaultThenLoad );
+			)).click( function (e) {
+				e.preventDefault();
+				loadResources( link.style, link.script );
+			} );
 		}
-	}
+	});
 	// console.timeEnd("timeName");
 };
 
