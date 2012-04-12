@@ -42,10 +42,10 @@ myTools.load = function(){
 	// Run (or create a link for) each script
 	$.each( myTools.list, function(i, link){
 		if ( ( $.isFunction(link.autorun) && link.autorun() ) || link.autorun === true ) {
-			// console.log("autorun " + link.title);
+			// mw.log("autorun " + link.title);
 			loadResources( link.script, link.style );
 		} else if ( ( $.isFunction(link.register) && link.register() ) || link.register === true   ) {
-			// console.log("register " + link.title);
+			// mw.log("register " + link.title);
 			$(mw.util.addPortletLink(
 				(link.portlet || 'p-js'), '#', link.title, link.id, link.desc, link.shortcut, link.before
 			)).click( function (e) {
@@ -57,5 +57,5 @@ myTools.load = function(){
 	// console.timeEnd("timeName");
 };
 
-console.log('MyTools: &now=' + myTools.now.getTime() + '; debug=' + myTools.debug );
+mw.log('MyTools: &now=' + myTools.now.getTime() + '; debug=' + myTools.debug );
 $( myTools.load );
