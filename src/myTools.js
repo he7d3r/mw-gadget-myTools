@@ -12,7 +12,7 @@ if ( typeof window.myTools === 'undefined' ) {
 }
 
 myTools.now = new Date();
-myTools.debug = /^(on|true|debug|1)$/.test( mw.util.getParamValue('debug') );
+myTools.debug = /^(on|true|debug|1)$/.test( mw.util.getParamValue('debug') ) || $.cookie( 'resourceLoaderDebug' ) !== null;
 myTools.load = function(){
 	var	home = '//pt.wikibooks.org/w/index.php?title=',
 		params = '&action=raw' + (myTools.debug ? '&now=' + myTools.now.getTime() : '&smaxage=21600&maxage=86400'),
