@@ -12,10 +12,9 @@ if ( typeof window.myTools === 'undefined' ) {
 }
 
 myTools.now = new Date();
-myTools.debug = /^(on|true|debug|1)$/.test( mw.util.getParamValue('debug') ) || $.cookie( 'resourceLoaderDebug' ) !== null;
 myTools.load = function(){
 	var	home = '//pt.wikibooks.org/w/index.php?title=',
-		params = '&action=raw' + (myTools.debug ? '&now=' + myTools.now.getTime() : '&smaxage=21600&maxage=86400'),
+		params = '&action=raw' + (mw.config.get( 'debug' ) ? '&now=' + myTools.now.getTime() : '&smaxage=21600&maxage=86400'),
 		reIsExternal = /^(https?:)?\/\//,
 		link, x;
 	var loadResources = function(js, css){
@@ -57,5 +56,5 @@ myTools.load = function(){
 	// console.timeEnd("timeName");
 };
 
-mw.log('MyTools: &now=' + myTools.now.getTime() + '; debug=' + myTools.debug );
+mw.log('MyTools: &now=' + myTools.now.getTime() + '; debug=' + mw.config.get( 'debug' ) );
 $( myTools.load );
