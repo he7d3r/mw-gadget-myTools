@@ -33,10 +33,10 @@ myTools.load = function(){
 	// console.time("timeName");
 
 	// Create a new portlet for my scripts
-	$('#p-cactions').clone().insertBefore('#p-cactions').attr({
+	$('#p-cactions').clone().attr({
 		'id': 'p-js',
 		'class': 'vectorMenu emptyPortlet'
-	}).find('li').remove().end().find('span').text('JS');
+	}).insertBefore('#p-views').find('li').remove().end().find('span').text('JS');
 
 	// Run (or create a link for) each script
 	$.each( myTools.list, function(i, link){
