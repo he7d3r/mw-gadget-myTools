@@ -3,64 +3,73 @@
  * @source: based on [[w:no:User:Jeblad/vector.js]] (oldid=10096547)
  * @author: [[w:no:User:Jeblad]]
  * @author: [[User:Helder.wiki]]
+ * @tracking: [[Special:GlobalUsage/User:Helder.wiki/Tools/myTools.js]] ([[File:User:Helder.wiki/Tools/myTools.js]])
  */
+/*jslint browser: true, white: true*/
+/*global jQuery, mediaWiki */
+( function ( mw, $ ) {
+'use strict';
 
-if ( typeof window.myTools === 'undefined' ) {
-	window.myTools = {
-		list: []
-	};
-}
-
-myTools.now = new Date();
-myTools.load = function(){
-	var	home = '//pt.wikibooks.org/w/index.php?title=',
-		params = '&action=raw' + (mw.config.get( 'debug' ) ? '&now=' + myTools.now.getTime() : '&smaxage=21600&maxage=86400'),
-		reIsExternal = /^(https?:)?\/\//,
-		link, x,
-	loadResources = function(js, css){
-		var page;
-		// FIXME: Fails on links such as https://toolserver.org/~magnus/wysiwtf/wysiwtf.js
-		// Consider using wikilink2URL() from [[w:en:User:PerfektesChaos/js/Utilities/d.js]]
-		if( css ) {
-			page = reIsExternal.test( css ) ? css: home + css;
-			mw.loader.load( page + '&ctype=text/css' + params, 'text/css' );
-		}
-		if( js ) {
-			page = reIsExternal.test( js ) ? js: home + js;
-			mw.loader.load( page + '&ctype=text/javascript' + params );
-		}
-	},
+var myTools = {
+	list: [],
+	now: new Date(),
+	load: function(){
+		var i, link,
+			home = '//pt.wikibooks.org/w/index.php?title=',
+			params = '&action=raw' + (mw.config.get( 'debug' )
+				? '&now=' + myTools.now.getTime()
+				: '&smaxage=21600&maxage=86400'),
+			reIsExternal = /^(https?:)?\/\//,
+			loadResources = function(js, css){
+				var page;
+				// FIXME: Fails on links such as https://toolserver.org/~magnus/wysiwtf/wysiwtf.js
+				// Consider using wikilink2URL() from [[w:en:User:PerfektesChaos/js/Utilities/d.js]]
+				if( css ) {
+					page = reIsExternal.test( css ) ? css: home + css;
+					mw.loader.load( page + '&ctype=text/css' + params, 'text/css' );
+				}
+				if( js ) {
+					page = reIsExternal.test( js ) ? js: home + js;
+					mw.loader.load( page + '&ctype=text/javascript' + params );
+				}
+			},
 			onClick = function (e) {
 				e.preventDefault();
 				loadResources( link.script, link.style );
 			};
-	// console.time("timeName");
+		// console.time("timeName");
 
-	// Create a new portlet for my scripts
-	$('#p-cactions').clone()
-		.attr({
-			'id': 'p-js',
-			'class': 'vectorMenu emptyPortlet'
-		}).insertBefore('#p-views')
-		.find('li').remove().end()
-		.find('span').text('JS').end()
-		.find('h5 a').css('background-position', 'bottom left');
+		// Create a new portlet for my scripts
+		$('#p-cactions').clone()
+			.attr({
+				'id': 'p-js',
+				'class': 'vectorMenu emptyPortlet'
+			}).insertBefore('#p-views')
+			.find('li').remove().end()
+			.find('span').text('JS').end()
+			.find('h5 a').css('background-position', 'bottom left');
 
-
-	// Run (or create a link for) each script
-	$.each( myTools.list, function(i, link){
-		if ( ( $.isFunction(link.autorun) && link.autorun() ) || link.autorun === true ) {
-			// mw.log("autorun " + link.title);
-			loadResources( link.script, link.style );
-		} else if ( ( $.isFunction(link.register) && link.register() ) || link.register === true   ) {
-			// mw.log("register " + link.title);
-			$(mw.util.addPortletLink(
-				(link.portlet || 'p-js'), '#', link.title, link.id, link.desc, link.shortcut, link.before
-			)).click( onClick );
+		// Run (or create a link for) each script
+		for( i = 0; i < myTools.list.length; i += 1 ){
+			link = myTools.list[i];
+			if ( ( $.isFunction(link.autorun) && link.autorun() ) || link.autorun === true ) {
+				// mw.log("autorun " + link.title);
+				loadResources( link.script, link.style );
+			} else if ( ( $.isFunction(link.register) && link.register() ) || link.register === true   ) {
+				// mw.log("register " + link.title);
+				$(mw.util.addPortletLink(
+					(link.portlet || 'p-js'), '#', link.title, link.id, link.desc, link.shortcut, link.before
+				)).click( onClick );
+			}
 		}
-	});
-	// console.timeEnd("timeName");
+		// console.timeEnd("timeName");
+	}
 };
+
+window.myTools = $.extend( myTools, window.myTools );
+// $.extend( window.myTools, $.extend( myTools, window.myTools ) );
 
 mw.log('MyTools: &now=' + myTools.now.getTime() + '; debug=' + mw.config.get( 'debug' ) );
 $( myTools.load );
+
+}( mediaWiki, jQuery ) );
