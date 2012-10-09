@@ -16,8 +16,8 @@ myTools.load = function(){
 	var	home = '//pt.wikibooks.org/w/index.php?title=',
 		params = '&action=raw' + (mw.config.get( 'debug' ) ? '&now=' + myTools.now.getTime() : '&smaxage=21600&maxage=86400'),
 		reIsExternal = /^(https?:)?\/\//,
-		link, x;
-	var loadResources = function(js, css){
+		link, x,
+	loadResources = function(js, css){
 		var page;
 		// FIXME: Fails on links such as https://toolserver.org/~magnus/wysiwtf/wysiwtf.js
 		// Consider using wikilink2URL() from [[w:en:User:PerfektesChaos/js/Utilities/d.js]]
@@ -29,14 +29,23 @@ myTools.load = function(){
 			page = reIsExternal.test( js ) ? js: home + js;
 			mw.loader.load( page + '&ctype=text/javascript' + params );
 		}
-	};
+	},
+			onClick = function (e) {
+				e.preventDefault();
+				loadResources( link.script, link.style );
+			};
 	// console.time("timeName");
 
 	// Create a new portlet for my scripts
-	$('#p-cactions').clone().attr({
-		'id': 'p-js',
-		'class': 'vectorMenu emptyPortlet'
-	}).insertBefore('#p-views').find('li').remove().end().find('span').text('JS');
+	$('#p-cactions').clone()
+		.attr({
+			'id': 'p-js',
+			'class': 'vectorMenu emptyPortlet'
+		}).insertBefore('#p-views')
+		.find('li').remove().end()
+		.find('span').text('JS').end()
+		.find('h5 a').css('background-position', 'bottom left');
+
 
 	// Run (or create a link for) each script
 	$.each( myTools.list, function(i, link){
@@ -47,10 +56,7 @@ myTools.load = function(){
 			// mw.log("register " + link.title);
 			$(mw.util.addPortletLink(
 				(link.portlet || 'p-js'), '#', link.title, link.id, link.desc, link.shortcut, link.before
-			)).click( function (e) {
-				e.preventDefault();
-				loadResources( link.script, link.style );
-			} );
+			)).click( onClick );
 		}
 	});
 	// console.timeEnd("timeName");
