@@ -35,9 +35,11 @@ var myTools = {
 					mw.loader.load( page + '&ctype=text/javascript' + params );
 				}
 			},
-			onClick = function (e) {
-				e.preventDefault();
-				loadResource( $( e.target ).data( 'resource' ) );
+			getOnClick = function ( resource ) {
+				return function( e ){
+					e.preventDefault();
+					loadResource( resource );
+				};
 			};
 		// console.time("timeName");
 
@@ -62,8 +64,7 @@ var myTools = {
 				$(mw.util.addPortletLink(
 					(link.portlet || 'p-js'), '#', link.title, link.id, link.desc, link.shortcut, link.before
 				))
-				.data( 'resource', { js: link.script, css: link.style } )
-				.click( onClick );
+				.click( getOnClick( { js: link.script, css: link.style } ) );
 			}
 		}
 		// console.timeEnd("timeName");
