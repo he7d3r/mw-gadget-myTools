@@ -20,8 +20,10 @@ var myTools = {
 				? '&now=' + myTools.now.getTime()
 				: '&smaxage=21600&maxage=86400'),
 			reIsExternal = /^(https?:)?\/\//,
-			loadResources = function(js, css){
-				var page;
+			loadResource = function( resource ){
+				var page,
+					css = resource.css,
+					js = resource.js;
 				// FIXME: Fails on links such as https://toolserver.org/~magnus/wysiwtf/wysiwtf.js
 				// Consider using wikilink2URL() from [[w:en:User:PerfektesChaos/js/Utilities/d.js]]
 				if( css ) {
@@ -35,7 +37,7 @@ var myTools = {
 			},
 			onClick = function (e) {
 				e.preventDefault();
-				loadResources( link.script, link.style );
+				loadResource( $( e.target ).data( 'resource' ) );
 			};
 		// console.time("timeName");
 
@@ -54,12 +56,14 @@ var myTools = {
 			link = myTools.list[i];
 			if ( ( $.isFunction(link.autorun) && link.autorun() ) || link.autorun === true ) {
 				// mw.log("autorun " + link.title);
-				loadResources( link.script, link.style );
+				loadResource( { js: link.script, css: link.style } );
 			} else if ( ( $.isFunction(link.register) && link.register() ) || link.register === true   ) {
 				// mw.log("register " + link.title);
 				$(mw.util.addPortletLink(
 					(link.portlet || 'p-js'), '#', link.title, link.id, link.desc, link.shortcut, link.before
-				)).click( onClick );
+				))
+				.data( 'resource', { js: link.script, css: link.style } )
+				.click( onClick );
 			}
 		}
 		// console.timeEnd("timeName");
