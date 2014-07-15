@@ -16,9 +16,9 @@ var myTools = {
 	load: function(){
 		var i, link,
 			home = '//pt.wikibooks.org/w/index.php?title=',
-			params = '&action=raw' + (mw.config.get( 'debug' )
+			params = '&action=raw' + ( mw.config.get( 'debug' )
 				? '&now=' + myTools.now.getTime()
-				: '&smaxage=21600&maxage=86400'),
+				: '' ),
 			reIsExternal = /^(https?:)?\/\//,
 			loadResource = function( resource ){
 				var page,
