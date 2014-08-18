@@ -2,7 +2,8 @@
  * Loader for My Tools
  * @source: based on [[w:no:User:Jeblad/vector.js]] (oldid=10096547)
  * @author: [[w:no:User:Jeblad]]
- * @author: [[User:Helder.wiki]]
+ * @author: Helder (https://github.com/he7d3r)
+ * @license: CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>
  * @tracking: [[Special:GlobalUsage/User:Helder.wiki/Tools/myTools.js]] ([[File:User:Helder.wiki/Tools/myTools.js]])
  */
 /*jslint browser: true, white: true*/
