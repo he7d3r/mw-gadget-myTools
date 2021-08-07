@@ -54,10 +54,10 @@
 			// Run (or create a link for) each script
 			for ( i = 0; i < myTools.list.length; i += 1 ) {
 				link = myTools.list[i];
-				if ( ( $.isFunction(link.autorun) && link.autorun() ) || link.autorun === true ) {
+				if ( ( typeof link.autorun === 'function' && link.autorun() ) || link.autorun === true ) {
 					// mw.log("autorun " + link.title);
 					loadResource( { js: link.script, css: link.style } );
-				} else if ( ( $.isFunction(link.register) && link.register() ) || link.register === true   ) {
+				} else if ( ( typeof link.register === 'function' && link.register() ) || link.register === true   ) {
 					// mw.log("register " + link.title);
 					$(mw.util.addPortletLink(
 						(link.portlet || 'p-js'), '#', link.title, link.id, link.desc, link.shortcut, link.before
